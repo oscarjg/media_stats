@@ -16,10 +16,12 @@ let socket = {
           socket_endpoint += ":" + process.env.SOCKET_ENDPOINT_PORT
         }
 
-        return new Socket("ws://" + socket_endpoint + endpoint, {
+        return new Socket("//" + socket_endpoint + endpoint, {
           params: params,
           logger: (kind, msg, data) => {
-            console.log(`${kind}:${msg}`, data)
+            if (process.env.ENVIRONMENT !== "prod") {
+              console.log(`${kind}:${msg}`, data)
+            }
           }
         })
     }

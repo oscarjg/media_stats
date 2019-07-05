@@ -10,9 +10,16 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :media_stats_web, MediaStatsWeb.Endpoint,
-       http: [:inet6, port: System.get_env("PORT") || 4000],
-       url: [host: "ms.comitium.io", port: 80],
-       cache_static_manifest: "priv/static/cache_manifest.json"
+       cache_static_manifest: "priv/static/cache_manifest.json",
+       url: [host: "ms.comitium.io", port: 443],
+       check_origin: false,
+       https: [
+              :inet6,
+              port: System.get_env("PORT") || 4000,
+              cipher_suite: :compatible,
+              keyfile: "/etc/letsencrypt/live/ms.comitium.io/privkey.pem",
+              certfile: "/etc/letsencrypt/live/ms.comitium.io/cert.pem"
+       ]
 
 # Do not print debug messages in production
 config :logger, level: :info

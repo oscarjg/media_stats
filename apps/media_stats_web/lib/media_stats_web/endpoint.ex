@@ -2,7 +2,7 @@ defmodule MediaStatsWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :media_stats_web
 
   socket "/socket/application", MediaStatsWeb.ApplicationSocket,
-         websocket: [connect_info: [:peer_data, :uri]],
+         websocket: [connect_info: [:uri]],
          longpoll: false
 
   # Serve at "/" the static files from "priv/static" directory.
