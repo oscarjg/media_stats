@@ -1,0 +1,25 @@
+<div class="col-md-12 d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Dashboard</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <%= link "New application", to: Routes.application_path(@conn, :new), class: "btn btn-sm btn-outline-secondary" %>
+    </div>
+</div>
+
+
+<%= for application <- @applications do %>
+<div class="col-md-6 pt-5 pb-2 mb-3">
+    <h5>
+      <%= link application.name, to: Routes.application_path(@conn, :edit, application.id)%>
+    </h5>
+
+    <div class="row" style="min-height: 250px">
+        <div class="col-md-4 rt-active-users">
+            <div data-rt-active-users="<%= application.credential.app_key %>" class="rt-active-users-counter"></div>
+        </div>
+        <div class="col-md-8" data-app-id="<%= application.credential.app_key %>">
+            <ul class="list-group"></ul>
+        </div>
+    </div>
+</div>
+<% end %>
+

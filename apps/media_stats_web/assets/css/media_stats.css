@@ -1,0 +1,28 @@
+hr{
+    border:0;
+    border-top:0.1rem solid #f4f5f6;
+    margin:1.0rem 0
+}
+
+.login-box {
+    margin-top: 5rem
+}
+
+.help-block {
+  color: #a94442;
+  display: block;
+}
+
+
+.rt-active-users {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #00a5dc;
+}
+
+.rt-active-users-counter {
+    font-size: 7em;
+    color: #FFF
+}

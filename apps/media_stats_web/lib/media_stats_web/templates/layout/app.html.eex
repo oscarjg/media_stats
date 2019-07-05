@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Media stats</title>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+
+          <%= if @current_user do %>
+            <%= link "Media Stats", to: Routes.dashboard_path(@conn, :index), class: "navbar-brand col-sm-3 col-md-2 mr-0" %>
+          <% else %>
+            <%= link "Media Stats", to: Routes.page_path(@conn, :index), class: "navbar-brand col-sm-3 col-md-2 mr-0" %>
+          <% end %>
+
+          <ul class="nav justify-content-end">
+          <%= if @current_user do %>
+
+            <li class="nav-item text-nowrap">
+              <%= link "Sign out", to: Routes.session_path(@conn, :logout), method: "delete", class: "nav-link" %>
+            </li>
+
+          <% else %>
+
+            <li class="nav-item">
+              <%= link "Register", to: Routes.user_path(@conn, :sign_up), class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+               <%= link "Login", to: Routes.session_path(@conn, :login), class: "nav-link" %>
+            </li>
+          <% end %>
+          </ul>
+        </nav>
+
+
+    <div class="container-fluid">
+        <div class="row px-5">
+            <%= render @view_module, @view_template, assigns %>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+  </body>
+</html>
