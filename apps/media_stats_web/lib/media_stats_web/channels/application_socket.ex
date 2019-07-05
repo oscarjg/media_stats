@@ -25,6 +25,8 @@ defmodule MediaStatsWeb.ApplicationSocket do
     end
   end
 
+  def connect(_params, _socket, _connect_info), do: :error
+
   def authenticate_with_host(socket, app_key, host) do
     case MediaStats.Accounts.authenticate_application(app_key, host) do
       {:ok, application} ->
@@ -52,8 +54,6 @@ defmodule MediaStatsWeb.ApplicationSocket do
         :error
     end
   end
-
-  def connect(_params, _socket, _connect_info), do: :error
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #

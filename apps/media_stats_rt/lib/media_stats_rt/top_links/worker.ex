@@ -71,10 +71,10 @@ defmodule MediaStatsRT.TopLinks.Worker do
   end
 
   defp push(bucket, link) do
-    MediaStatsRT.TopLinks.Bucket.push(bucket, link)
+    MediaStatsRT.TopLinks.Bucket.push(bucket, MediaStatsRT.LinksHelper.generate_unique(link))
   end
 
   defp drop(bucket, link) do
-    MediaStatsRT.TopLinks.Bucket.drop(bucket, link)
+    MediaStatsRT.TopLinks.Bucket.drop(bucket, MediaStatsRT.LinksHelper.generate_unique(link))
   end
 end
