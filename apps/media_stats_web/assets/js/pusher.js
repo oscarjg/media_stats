@@ -27,15 +27,11 @@ class Pusher {
             links_to_drop: [],
         }
 
-        if (current_url === referer_url) {
-            return
-        }
-
         if (current_url) {
             links.links_to_push = [current_url]
         }
 
-        if (referer_url) {
+        if (referer_url && current_url !== referer_url) {
             links.links_to_drop = [referer_url]
         }
 
