@@ -12,7 +12,7 @@ defmodule MediaStatsWeb.TopLinksRTChannel do
       %{
         top_links: fetch_initial_value(socket.assigns.app_key, limit)
       },
-      socket
+      assign(socket, :limit, limit)
     }
   end
 
@@ -25,7 +25,7 @@ defmodule MediaStatsWeb.TopLinksRTChannel do
       links_to_push,
       links_to_drop,
       fn {:ok, results} -> broadcast_top_links(socket, results, "pushed_links") end,
-      limit: params["limit"] || 1000
+      limit: socket.assigns.limit || 1000
     )
 
     {:reply, :ok, socket}

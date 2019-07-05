@@ -17,10 +17,6 @@ class Pusher {
               .join()
               .receive("error", reason => console.log("error!", reason))
 
-        this.socket.onClose(() => {
-            this.tracker.reset()
-        })
-
         this._handle()
     }
 
