@@ -7,7 +7,7 @@
 
 
 <%= for application <- @applications do %>
-<div class="col-md-6 pt-5 pb-2 mb-3">
+<div class="col-md-12 pt-5 pb-2 mb-3">
     <h5>
       <%= link application.name, to: Routes.application_path(@conn, :edit, application.id)%>
     </h5>
