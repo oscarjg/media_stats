@@ -6,43 +6,29 @@ let Application = {
             return
         }
 
-        socket.connect()
+        socket.connect();
 
         let channel = socket.channel("rt:top-links:" + app_key, () => {
           return {limit: 10}
-        })
+        });
 
-        let presence = new Presence(channel)
+        let presence = new Presence(channel);
 
-        presence.onLeave((id, current, leftPres) => {
-            if (typeof leftPres.metas !== 'undefined') {
-                let metas   = leftPres.metas[0]
-
-                if (typeof metas.params.tracker !== 'undefined') {
-                    let tracker = metas.params.tracker
-                    let links = {
-                        links_to_push: [],
-                        links_to_drop: [
-                            tracker.current_url
-                        ],
-                    }
-
-                    channel.push("push_links", links)
-                }
-            }
-        })
-
-        presence.onSync((id, current, join, leave) => {
-          let list = presence.list()
+        presence.onSync(() => {
+          let list = presence.list();
 
           if (typeof list[0] !== 'undefined') {
             this.updateActiveUsers(app_key, this.calculateUniqueUsers(list[0].metas))
           }
-        })
+        });
 
-        channel.on("pushed_links", resp => {
+        channel.on("link_pushed", resp => {
             this.renderTopLinks(element, resp)
-        })
+        });
+
+        channel.on("link_dropped", resp => {
+            this.renderTopLinks(element, resp)
+        });
 
         channel.join()
               .receive("ok", resp => {
@@ -53,8 +39,8 @@ let Application = {
 
     },
     renderTopLinks(element, resp) {
-        let containerEl = element.firstElementChild
-        let template    = document.createElement("ul")
+        let containerEl = element.firstElementChild;
+        let template    = document.createElement("ul");
         template.className = "list-group"
 
         resp.top_links.forEach((obj) => {
@@ -64,12 +50,12 @@ let Application = {
             template.innerHTML += `
                 <li class="list-group-item">${url} <span class="float-right badge badge-primary badge-pill">${count}</span></li>
             `
-        })
+        });
 
-        containerEl.replaceWith(template)
+        containerEl.replaceWith(template);
     },
     updateActiveUsers(app_key, counter) {
-        let el = document.querySelectorAll('[data-rt-active-users="'+app_key+'"]')
+        let el = document.querySelectorAll('[data-rt-active-users="'+app_key+'"]');
 
         if (el.length === 1) {
             el = el[0]
@@ -78,13 +64,13 @@ let Application = {
     },
     calculateUniqueUsers(metas) {
         const metasWithTracker = metas.filter((meta) => {
-            const params = this._getObjectProperty(meta, "params")
+            const params = this._getObjectProperty(meta, "params");
 
             if (params !== false) {
-                const tracker = this._getObjectProperty(params, "tracker")
+                const tracker = this._getObjectProperty(params, "tracker");
 
                  if (tracker !== false) {
-                    const id = this._getObjectProperty(tracker, "id")
+                    const id = this._getObjectProperty(tracker, "id");
 
                     if (id !== false) {
                         return true;
@@ -93,11 +79,11 @@ let Application = {
             }
 
             return false;
-        })
+        });
 
         const metasIdentifiers = metasWithTracker.map((meta) => {
             return meta.params.tracker.id
-        })
+        });
 
         const distinctIdentifiers = [...new Set(metasIdentifiers)]
 
@@ -106,6 +92,6 @@ let Application = {
     _getObjectProperty(object, prop) {
         return object.hasOwnProperty(prop) === true ? object[prop] : false
     }
-}
+};
 
 export default Application

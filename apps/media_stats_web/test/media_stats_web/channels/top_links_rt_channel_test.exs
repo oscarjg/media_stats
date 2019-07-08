@@ -24,18 +24,21 @@ defmodule MediaStatsWeb.ApplicationSocketTest do
   test "push new links to non existent bucket", %{socket: socket, bucket_name: bucket_name} do
     {:ok, _, socket} = subscribe_and_join(socket, "rt:top-links:" <> bucket_name, %{})
 
-    links_to_push = [
-      "https://foo.com",
-      "https://foo.com",
-      "https://foo.com",
-      "https://bar.com"
-    ]
-
-    links_to_drop = []
-
-    ref = push socket, "push_links", %{links_to_push: links_to_push, links_to_drop: links_to_drop}
+    ref = push socket, "push_link", %{link: "https://foo.com"}
     assert_reply ref, :ok, %{}
-    assert_broadcast "pushed_links", %{top_links: links}
+    assert_broadcast "link_pushed", %{top_links: links}
+
+    ref = push socket, "push_link", %{link: "https://foo.com"}
+    assert_reply ref, :ok, %{}
+    assert_broadcast "link_pushed", %{top_links: links}
+
+    ref = push socket, "push_link", %{link: "https://foo.com"}
+    assert_reply ref, :ok, %{}
+    assert_broadcast "link_pushed", %{top_links: links}
+
+    ref = push socket, "push_link", %{link: "https://bar.com"}
+    assert_reply ref, :ok, %{}
+    assert_broadcast "link_pushed", %{top_links: links}
 
     assert {:ok, %{"https://foo.com" => %{count: 3}}}= Enum.fetch(links,0)
     assert {:ok, %{"https://bar.com" => %{count: 1}}}= Enum.fetch(links,1)
@@ -49,46 +52,33 @@ defmodule MediaStatsWeb.ApplicationSocketTest do
     MediaStatsRT.TopLinks.Bucket.push(bucket, "https://foo.com")
     MediaStatsRT.TopLinks.Bucket.push(bucket, "https://bar.com")
 
-    links_to_push = [
-      "https://foo.com",
-      "https://foo.com",
-      "https://foo.com",
-      "https://bar.com"
-    ]
-
-    links_to_drop = [
-      "https://bar.com"
-    ]
-
     {:ok, _, socket} = subscribe_and_join(socket, "rt:top-links:" <> bucket_name, %{})
-    ref = push socket, "push_links", %{links_to_push: links_to_push, links_to_drop: links_to_drop}
+    ref = push socket, "push_link", %{link: "https://foo.com"}
     assert_reply ref, :ok, %{}
-    assert_broadcast "pushed_links", %{top_links: links}
-    assert {:ok, %{"https://foo.com" => %{count: 6}}}= Enum.fetch(links,0)
+    assert_broadcast "link_pushed", %{top_links: links}
+
+    assert {:ok, %{"https://foo.com" => %{count: 4}}}= Enum.fetch(links,0)
     assert {:ok, %{"https://bar.com" => %{count: 1}}}= Enum.fetch(links,1)
   end
 
-  test "drop links on existent bucket ", %{socket: socket, bucket_name: bucket_name} do
+  test "drop current link on exits", %{socket: socket, bucket_name: bucket_name} do
     bucket = create_bucket(bucket_name)
 
     MediaStatsRT.TopLinks.Bucket.push(bucket, "https://foo.com")
     MediaStatsRT.TopLinks.Bucket.push(bucket, "https://foo.com")
-    MediaStatsRT.TopLinks.Bucket.push(bucket, "https://foo.com")
-    MediaStatsRT.TopLinks.Bucket.push(bucket, "https://bar.com")
 
-    links_to_push = []
+    {:ok, _, socket} = subscribe_and_join(socket, "rt:top-links:" <> bucket_name, %{
+      "tracker" => %{"current_url" => "https://foo.com"}
+    })
 
-    links_to_drop = [
-      "https://foo.com",
-      "https://bar.com"
-    ]
+    assert MediaStatsRT.TopLinks.Bucket.list(bucket) == {:ok, [{"https://foo.com", %{count: 2}}]}
 
-    {:ok, _, socket} = subscribe_and_join(socket, "rt:top-links:" <> bucket_name, %{})
-    ref = push socket, "push_links", %{links_to_push: links_to_push, links_to_drop: links_to_drop}
-    assert_reply ref, :ok, %{}
-    assert_broadcast "pushed_links", %{top_links: links}
-    assert {:ok, %{"https://foo.com" => %{count: 2}}}= Enum.fetch(links,0)
-    assert :error = Enum.fetch(links,1)
+    Process.flag(:trap_exit, true)
+    close(socket)
+
+    assert_broadcast "link_dropped", %{top_links: _links}
+
+    assert MediaStatsRT.TopLinks.Bucket.list(bucket) == {:ok, [{"https://foo.com", %{count: 1}}]}
   end
 
   defp create_bucket(name) do

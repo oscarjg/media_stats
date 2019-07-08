@@ -3,28 +3,41 @@ defmodule MediaStatsWeb.TopLinksRTChannel do
   alias MediaStatsWeb.Presence
 
   def join("rt:top-links:" <> _app_key, params, socket) do
-    limit = params["limit"] || 1000
+    limit   = params["limit"] || 1000
+    tracker = params["tracker"] || nil
+
+    socket =
+      socket
+      |> assign(:limit, limit)
+      |> assign(:tracker, tracker)
+
 
     send(self(), {:after_join, params})
 
-    {
-      :ok,
-      %{
-        top_links: fetch_initial_value(socket.assigns.app_key, limit)
-      },
-      assign(socket, :limit, limit)
-    }
+    {:ok, fetch_initial_value(socket.assigns.app_key, limit), socket}
   end
 
-  def handle_in("push_links", params, socket) do
+  def terminate({:shutdown, _}, socket) do
 
-    {links_to_push, links_to_drop} = {params["links_to_push"], params["links_to_drop"]}
+    case socket.assigns.tracker do
+      %{"current_url" => current_url} ->
+        task = MediaStatsRT.TopLinks.Worker.drop_link_async(
+          socket.assigns.app_key,
+          current_url,
+          limit: socket.assigns.limit || 1000
+        )
 
-    MediaStatsRT.TopLinks.Worker.handle_links(
+        results = Task.await(task)
+        broadcast_top_links(socket, results, "link_dropped")
+      _ -> true
+    end
+  end
+
+  def handle_in("push_link", params, socket) do
+    MediaStatsRT.TopLinks.Worker.push_link(
       socket.assigns.app_key,
-      links_to_push,
-      links_to_drop,
-      fn {:ok, results} -> broadcast_top_links(socket, results, "pushed_links") end,
+      params["link"],
+      fn {:ok, results} -> broadcast_top_links(socket, results, "link_pushed") end,
       limit: socket.assigns.limit || 1000
     )
 
@@ -57,6 +70,9 @@ defmodule MediaStatsWeb.TopLinksRTChannel do
       {:ok, bucket} ->
         {:ok, results} = MediaStatsRT.TopLinks.Bucket.list(bucket, 0, limit)
         Phoenix.View.render_one(results, MediaStatsWeb.TopLinksView, "top_links.json")
+        %{
+          top_links: Phoenix.View.render_one(results, MediaStatsWeb.TopLinksView, "top_links.json")
+        }
       :error ->
         MediaStatsRT.TopLinks.Registry.create(MediaStatsRT.TopLinks.Registry, app_key)
         fetch_initial_value(app_key, limit)

@@ -7,6 +7,7 @@ defmodule MediaStatsRT.TopLinks.Worker do
 
   @spec push_link(String.t, String.t, Function.t, Keyword.t, pid()) :: {:ok, pid()} | {:error, String.t}
   @spec drop_link(String.t, String.t, Function.t, Keyword.t, pid()) :: {:ok, pid()} | {:error, String.t}
+  @spec drop_link_async(String.t, String.t, Keyword.t, pid()) :: {:ok, pid()} | {:error, String.t}
   @spec handle_links(String.t, String.t | List.t, String.t | List.t, Function.t, Keyword.t, pid()) :: {:ok, pid()} | {:error, String.t}
 
   def push_link(client_name, link, callback, client_opts \\ [], registry \\ MediaStatsRT.TopLinks.Registry) do
@@ -35,6 +36,23 @@ defmodule MediaStatsRT.TopLinks.Worker do
           callback.({:ok, results})
         :error ->
           callback.({:not_modified, []})
+      end
+    end)
+  end
+
+  @doc """
+  Drop link from the client bucket. If the bucket don't exists it will be created
+  """
+  def drop_link_async(client_name, link, client_opts \\ [], registry \\ MediaStatsRT.TopLinks.Registry) do
+    Task.async(fn ->
+      case MediaStatsRT.TopLinks.Registry.lookup(registry, client_name) do
+        {:ok, bucket} ->
+          MediaStatsRT.TopLinks.Bucket.drop(bucket, link)
+          {:ok, results} = MediaStatsRT.TopLinks.Bucket.list(bucket, client_opts[:from] || 0, client_opts[:limit] || 1000)
+          results
+        :error ->
+          MediaStatsRT.TopLinks.Registry.create(registry, client_name, client_opts)
+          drop_link(client_name, link, client_opts)
       end
     end)
   end
