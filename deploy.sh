@@ -19,7 +19,7 @@ else
 fi
 
 MIX_ENV=${ENV} mix compile
-npm run deploy --prefix ./apps/media_stats_web/assets
+npm install --prefix ./apps/media_stats_web/assets && npm run deploy --prefix ./apps/media_stats_web/assets
 
 if [ $UPGRADE} = upgrade ]; then
     echo "MIX_ENV=${ENV} mix do phx.digest, distillery.release --env=${ENV} --upgrade"
