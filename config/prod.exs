@@ -19,7 +19,10 @@ config :media_stats_web, MediaStatsWeb.Endpoint,
               cipher_suite: :compatible,
               keyfile: "/etc/letsencrypt/live/ms.comitium.io/privkey.pem",
               certfile: "/etc/letsencrypt/live/ms.comitium.io/cert.pem"
-       ]
+       ],
+       server: true,
+       root: ".",
+       version: Application.spec(:phoenix_distillery, :vsn)
 
 # Do not print debug messages in production
 config :logger, level: :info
