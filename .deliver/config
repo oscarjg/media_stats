@@ -1,6 +1,6 @@
 # .deliver/config
 
-APP="media_stats"
+APP="media_stats_umbrella"
 
 BUILD_HOST="ms.comitium.io"
 BUILD_USER="bab"
