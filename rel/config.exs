@@ -9,7 +9,7 @@
 
 use Distillery.Releases.Config,
     # This sets the default release built by `mix distillery.release`
-    default_release: :default,
+    default_release: :media_stats_umbrella,
     # This sets the default environment used by `mix distillery.release`
     default_environment: Mix.env()
 
@@ -47,7 +47,7 @@ end
 # will be used by default
 
 release :media_stats_umbrella do
-  set version: "0.0.2"
+  set version: "0.0.1"
   set applications: [
     :runtime_tools,
     media_stats: :permanent,
