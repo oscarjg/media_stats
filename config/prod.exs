@@ -22,7 +22,7 @@ config :media_stats_web, MediaStatsWeb.Endpoint,
        ],
        server: true,
        root: ".",
-       version: Application.spec(:phoenix_distillery, :vsn)
+       version: Application.spec(:media_stats_umbrella, :vsn)
 
 # Do not print debug messages in production
 config :logger, level: :info
