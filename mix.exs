@@ -3,8 +3,6 @@ defmodule MediaStatsUmbrella.MixProject do
 
   def project do
     [
-      app: :media_stats_umbrella,
-      version: "0.0.1",
       apps_path: "apps",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
