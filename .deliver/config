@@ -3,7 +3,7 @@
 APP="media_stats"
 
 BUILD_HOST="ms.comitium.io"
-BUILD_USER="bab"
+BUILD_USER="root"
 BUILD_AT="/home/bab/media_stats/build"
 
 PRODUCTION_HOSTS="ms.comitium.io"
