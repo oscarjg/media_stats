@@ -21,3 +21,6 @@ erl_crash.dump
 
 # ENV FILES
 *.env
+
+# E-DELIVER
+.deliver/releases/

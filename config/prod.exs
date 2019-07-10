@@ -22,7 +22,8 @@ config :media_stats_web, MediaStatsWeb.Endpoint,
        ],
        server: true,
        root: ".",
-       version: Application.spec(:media_stats_umbrella, :vsn)
+       version: Application.spec(:media_stats_web, :vsn),
+       code_reloader: false
 
 # Do not print debug messages in production
 config :logger, level: :info

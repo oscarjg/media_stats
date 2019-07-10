@@ -1,0 +1,21 @@
+# .deliver/config
+
+APP="media_stats"
+
+BUILD_HOST="ms.comitium.io"
+BUILD_USER="bab"
+BUILD_AT="/home/bab/media_stats/build"
+
+PRODUCTION_HOSTS="ms.comitium.io"
+PRODUCTION_USER="bab"
+DELIVER_TO="/var/www/media_stats"
+
+# For *Phoenix* projects, symlink prod.secret.exs to our tmp source
+pre_erlang_get_and_update_deps() {
+  local _prod_secret_path="/home/bab/media_stats/secrets/prod.secret.exs"
+  if [ "$TARGET_MIX_ENV" = "prod" ]; then
+    __sync_remote "
+      ln -sfn '$_prod_secret_path' '$BUILD_AT/config/prod.secret.exs'
+    "
+  fi
+}
