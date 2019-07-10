@@ -9,7 +9,7 @@
 ***DEPLOY TO PRODUCTION***
  
  ```
- mix edeliver deploy release to production`
+ mix edeliver deploy release to production
  ```
  
 ***START PRODUCTION***
