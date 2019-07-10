@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 VERSION=${1}
-UPGRADE=${2:-""}
+ACTION=${2:-"upgrade"}
 ENV=${3:-prod}
 DEPLOY_PATH=${4:-"/var/www/media_stats"}
 BRANCH=${5:-"master"}
@@ -21,7 +21,7 @@ fi
 MIX_ENV=${ENV} mix compile
 npm install --prefix ./apps/media_stats_web/assets && npm run deploy --prefix ./apps/media_stats_web/assets
 
-if [ ${UPGRADE} = upgrade ]; then
+if [ ${ACTION} = upgrade ]; then
     echo "MIX_ENV=${ENV} mix do phx.digest, distillery.release --env=${ENV} --upgrade"
     MIX_ENV=${ENV} mix do phx.digest, distillery.release --env=${ENV} --upgrade
 else
@@ -38,7 +38,7 @@ else
     echo "Release folder ${DEPLOY_PATH} has already exists"
 fi
 
-if [ ${UPGRADE} = upgrade ]; then
+if [ ${ACTION} = upgrade ]; then
     mkdir ${DEPLOY_PATH}/releases/${VERSION}
     cp _build/${ENV}/rel/media_stats_umbrella/releases/${VERSION}/media_stats_umbrella.tar.gz ${DEPLOY_PATH}/releases/${VERSION}/
     echo "The app is ready for upgrading running ---> ${DEPLOY_PATH}/bin/media_stats_umbrella upgrade ${VERSION}"
