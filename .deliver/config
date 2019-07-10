@@ -3,11 +3,11 @@
 APP="media_stats_umbrella"
 
 BUILD_HOST="ms.comitium.io"
-BUILD_USER="bab"
+BUILD_USER="root"
 BUILD_AT="/home/bab/media_stats/build"
 
 PRODUCTION_HOSTS="ms.comitium.io"
-PRODUCTION_USER="bab"
+PRODUCTION_USER="root"
 DELIVER_TO="/var/www/media_stats"
 
 # For *Phoenix* projects, symlink prod.secret.exs to our tmp source
