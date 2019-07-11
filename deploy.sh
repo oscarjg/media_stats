@@ -14,12 +14,12 @@ git checkout ${BRANCH}
 git pull origin ${BRANCH}
 
 echo "Creating secrets files if are not exists"
-if [ ! -f "${BUILD_PATH}/config/prod.secrets.exs" ]; then
-    cp ${SECRETS_PATH}/prod.secrets.exs ${BUILD_PATH}/config/prod.secrets.exs
+if [ ! -f "${BUILD_PATH}/config/prod.secret.exs" ]; then
+    cp ${SECRETS_PATH}/prod.secret.exs ${BUILD_PATH}/config/prod.secret.exs
 fi
 
 if [ ! -f "${BUILD_PATH}/apps/media_stats_web/apps/media_stats_web/assets/.env" ]; then
-    cp ${SECRETS_PATH}/media_stats_web_env_vars ${BUILD_PATH}/apps/media_stats_web/apps/media_stats_web/assets/.env
+    cp ${SECRETS_PATH}/media_stats_web_env_vars ${BUILD_PATH}/apps/media_stats_web/assets/.env
 fi
 
 echo "Fetching deps"
