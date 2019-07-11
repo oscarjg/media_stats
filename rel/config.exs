@@ -31,13 +31,13 @@ environment :dev do
   # dev mode.
   set dev_mode: true
   set include_erts: false
-  set cookie: :":{TL}CGXUebvIY<yD@3sU(znizJ<vKY.5n?yyo(aH{9%*~4n1DUm<:nWWmA97mi;"
+  set cookie: "xEumhxpFEoASVDrMtYwFp7DQLe3mTo4d2vb44EHGMuBnKRhpsU"
 end
 
 environment :prod do
   set include_erts: true
   set include_src: false
-  set cookie: :"jM*/ZX<1Tqv1zu9jAF`rOM?AFEC&MUgeu}NMPPv^IW.OfkN`9p{!xzzDxiWE@uk*"
+  set cookie: "46IIVqnilE2ogh76cmcOZ7DNqbSQOK6LlNqtxmn6fyiPCqdnmD"
   set vm_args: "rel/vm.args"
 end
 
@@ -47,7 +47,7 @@ end
 # will be used by default
 
 release :media_stats_umbrella do
-  set version: "0.0.5"
+  set version: "0.0.6"
   set applications: [
     :runtime_tools,
     media_stats: :permanent,
