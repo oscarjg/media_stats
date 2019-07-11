@@ -4,7 +4,7 @@ defmodule MediaStats.MixProject do
   def project do
     [
       app: :media_stats,
-      version: "0.0.4",
+      version: "0.0.1",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",

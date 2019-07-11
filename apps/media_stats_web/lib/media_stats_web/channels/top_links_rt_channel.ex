@@ -3,10 +3,6 @@ defmodule MediaStatsWeb.TopLinksRTChannel do
   alias MediaStatsWeb.Presence
 
   def join("rt:top-links:" <> _app_key, params, socket) do
-    MediaStatsRT.LinksValidator.ping()
-
-
-
     limit   = params["limit"] || 1000
     tracker = params["tracker"] || nil
 
