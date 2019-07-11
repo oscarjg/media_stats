@@ -51,7 +51,7 @@ release :media_stats_umbrella do
   set applications: [
     :runtime_tools,
     media_stats: :permanent,
-    media_stats_rt: :permanent,
+    media_stats_rt: [permanent: true, version: "0.0.2"],
     media_stats_web: :permanent
   ]
 end
