@@ -4,12 +4,23 @@ VERSION=${1}
 ACTION=${2:-"upgrade"}
 ENV=${3:-prod}
 DEPLOY_PATH=${4:-"/var/www/media_stats"}
-BRANCH=${5:-"master"}
+BUILD_PATH=${5:-"/home/bab/media_stats/build"}
+SECRETS_PATH=${6:-"/home/bab/media_stats/secrets"}
+BRANCH=${7:-"master"}
 
 echo "Updating repository from branch $BRANCH"
 git fetch
 git checkout ${BRANCH}
 git pull origin ${BRANCH}
+
+echo "Creating secrets files if are not exists"
+if [ ! -f "${BUILD_PATH}/config/prod.secrets.exs" ]; then
+    cp ${SECRETS_PATH}/prod.secrets.exs ${BUILD_PATH}/config/prod.secrets.exs
+fi
+
+if [ ! -f "${BUILD_PATH}/apps/media_stats_web/apps/media_stats_web/assets/.env" ]; then
+    cp ${SECRETS_PATH}/media_stats_web_env_vars ${BUILD_PATH}/apps/media_stats_web/apps/media_stats_web/assets/.env
+fi
 
 echo "Fetching deps"
 if [ ${ENV} = prod ]; then
