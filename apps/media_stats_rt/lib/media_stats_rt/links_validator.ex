@@ -43,4 +43,6 @@ defmodule MediaStatsRT.LinksValidator do
          _ -> {:ok, url}
        end
   end
+
+  def ping, do: :pong
 end
