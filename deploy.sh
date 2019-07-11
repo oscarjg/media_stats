@@ -6,12 +6,6 @@ ENV=${3:-prod}
 DEPLOY_PATH=${4:-"/var/www/media_stats"}
 BUILD_PATH=${5:-"/home/bab/media_stats/build"}
 SECRETS_PATH=${6:-"/home/bab/media_stats/secrets"}
-BRANCH=${7:-"master"}
-
-echo "Updating repository from branch $BRANCH"
-git fetch
-git checkout ${BRANCH}
-git pull origin ${BRANCH}
 
 echo "Creating secrets files if are not exists"
 if [ ! -f "${BUILD_PATH}/config/prod.secret.exs" ]; then
