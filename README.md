@@ -15,7 +15,12 @@
 ***START PRODUCTION***
 ```
 mix edeliver start production
-``
+```
+
+***UPGRADE VERSION***
+```
+mix edeliver upgrade production
+```
  
  
 

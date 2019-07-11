@@ -47,7 +47,7 @@ end
 # will be used by default
 
 release :media_stats_umbrella do
-  set version: "0.0.2"
+  set version: current_version(:media_stats_web)
   set applications: [
     :runtime_tools,
     media_stats: :permanent,
