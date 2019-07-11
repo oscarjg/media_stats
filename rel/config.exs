@@ -47,11 +47,9 @@ end
 # will be used by default
 
 release :media_stats_umbrella do
-  set version: "0.0.5"
+  set version: "0.0.6"
   set applications: [
     :runtime_tools,
-    :observer,
-    :wx,
     media_stats: :permanent,
     media_stats_rt: :permanent,
     media_stats_web: :permanent
