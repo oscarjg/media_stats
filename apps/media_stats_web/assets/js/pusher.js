@@ -2,7 +2,13 @@ import socket from "./socket"
 import Tracker from "./tracker"
 
 class Pusher {
-    constructor(app_key) {
+    constructor(options) {
+        if (typeof options.app_key !== 'string') {
+            throw "app_key is required"
+        }
+
+        const app_key = options.app_key
+
         this.tracker = new Tracker();
         this.socket = socket.init("/socket/application", {app_key: app_key});
         this.socket.connect();

@@ -1,6 +1,6 @@
 # MediaStats
 
-####RELEASE CODE TO PRODUCTION
+#### RELEASE CODE TO PRODUCTION
 
 **Create a new release**
 ```
@@ -34,21 +34,34 @@ iex> Node.connect(:"media_stats_umbrella@148.251.47.102")
 iex> :observer.start
 ```
 
-**Remote server actions from local**
+**Server actions**
 ```
 // Your local machine must be access to remote wihtout pass
 
 // Check server status
-sh server.sh describe
+/var/www/media_stats/bin/media_stats_umbrella describe
 
 // Stop server
-sh server.sh stop
+/var/www/media_stats/bin/media_stats_umbrella stop
 
 // Start server
-sh server.sh start
+/var/www/media_stats/bin/media_stats_umbrella start
 
-// Foreground server
-sh server.sh foreground
+// Start as foreground server
+/var/www/media_stats/bin/media_stats_umbrella foreground
+```
+
+#### Javascript libraries
+
+**Pusher**
+
+```
+<script src="https://ms.comitium.io/js/pusher.js"></script>
+<script>
+    Pusher.init({
+        app_key: "your_app_key"
+    })
+</script>
 ```
  
 
