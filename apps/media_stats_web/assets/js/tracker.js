@@ -4,12 +4,11 @@ const COOKIE_NAME =  "media-stats-tracker";
 
 export default class Tracker {
     constructor() {
-        this.id = null;
-        this.current_url = null;
-        this.app_version = null;
+        this.id          = this._get_id_from_cookie();
+        this.current_url = this._get_browser_url();
+        this.app_version = this._get_app_version_from_cookie();
 
         this._handle_user_cookie();
-        this._handle()
     }
 
     get() {
@@ -23,7 +22,7 @@ export default class Tracker {
     setInitialCookie() {
       Cookies.set(COOKIE_NAME, {
         app_version: this._get_app_version(),
-        id: this._get_id_from_cookie(),
+        id: this.id ,
       })
     }
 
@@ -33,10 +32,6 @@ export default class Tracker {
       if (!data || !data.app_version || data.app_version < this._get_app_version()) {
         this.setInitialCookie()
       }
-    }
-
-    _handle() {
-      this._set_current_url(this._get_browser_url());
     }
 
     _set_current_url(url) {
@@ -67,6 +62,16 @@ export default class Tracker {
 
     _get_app_version() {
       return process.env.APP_VERSION
+    }
+
+    _get_app_version_from_cookie() {
+      let data = this._get_cookie_data();
+
+      if (!data || !data.app_version) {
+        return null
+      }
+
+      return data.app_version
     }
 
     _generate_id() {
